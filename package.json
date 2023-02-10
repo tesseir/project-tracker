@@ -1,0 +1,33 @@
+{
+  "name": "project-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tesseir/project-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "connect-session-sequelize": "^7.0.4",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-handlebars": "^6.0.7",
+    "express-session": "^1.17.3",
+    "handlebars": "^4.7.6",
+    "jsmind": "^0.5.2",
+    "mysql2": "^3.1.1",
+    "sequelize": "^6.28.0"
+  },
+  "bugs": {
+    "url": "https://github.com/tesseir/project-tracker/issues"
+  },
+  "homepage": "https://github.com/tesseir/project-tracker#readme"
+}
