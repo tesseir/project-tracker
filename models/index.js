@@ -1,18 +1,18 @@
-const { User, Team, Project } = require('../models');
-//associations
+// const { User, Team, Project } = require('../Models');
+// //associations
 
-/*
-Team.hasMany(Users)
+// /*
+// Team.hasMany(Users)
 
-*/
-Project.belongsTo(team, {
-  foreignKey: 'team_id',
-  as: 'team'
-})
+// */
+// Project.belongsTo(Team, {
+//   foreignKey: 'team_id',
+//   as: 'team'
+// })
 
-Team.hasMany(User, {
-  foreignKey: 'user_id',
-  as: 'users'
-})
+// Team.hasMany(User, {
+//   foreignKey: 'user_id',
+//   as: 'users'
+// })
 
 
