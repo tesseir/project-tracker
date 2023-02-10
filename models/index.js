@@ -1,3 +1,4 @@
+const { User, Team, Project } = require('../models');
 //associations
 
 /*

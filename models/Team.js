@@ -21,3 +21,6 @@ Team.init(
     },
   }
 )
+console.log(`User model connection =`)
+console.log( User=== sequelize.models.Team)
+module.exports = Team
