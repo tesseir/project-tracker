@@ -1,18 +1,22 @@
-// const { User, Team, Project } = require('../Models');
 // //associations
-
-// /*
-// Team.hasMany(Users)
-
-// */
-// Project.belongsTo(Team, {
-//   foreignKey: 'team_id',
-//   as: 'team'
-// })
-
-// Team.hasMany(User, {
-//   foreignKey: 'user_id',
-//   as: 'users'
-// })
+const express = require("express");
+const { Model, DataTypes } = require("sequelize");
+const User = require('./User')
+const Team = require('./Team')
+const Project = require('./Project')
+const Notebook = require('./Notebook')
+const Note = require('./Note')
+const Map = require('./Map')
 
 
+
+module.exports = {
+  User,
+  Team,
+  Project,
+  Notebook,
+  Note,
+  Map
+  
+  
+  }

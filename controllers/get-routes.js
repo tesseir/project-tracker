@@ -6,23 +6,23 @@ router.get('/', (req, res) => {
 })
 
 //get home
-router.get('/', (req, res) => {
+router.get('/home', (req, res) => {
   res.json({message: 'reached home'})
 })
 
 //get team
 router.get('/team', (req, res) => {
-  res.json({message: 'reached controllers/getRoutes'})
+  res.json({message: 'reached Team'})
 })
 
 //get project
 router.get('/project', (req, res) => {
-  res.json({message: 'reached controllers/getRoutes'})
+  res.json({message: 'reached project'})
 })
 
 //get resources
-router.get('/resources', (req, res) => {
-  res.json({message: 'reached controllers/getRoutes'})
+router.get('/notebook', (req, res) => {
+  res.json({message: 'reached notebook'})
 })
 
 

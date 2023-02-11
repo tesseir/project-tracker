@@ -3,12 +3,12 @@ const bcrypt = require("bcrypt");
 const sequelize = require("../config/connection");
 
 class User extends Model {
-  checkPassword(loginPw) {
-    console.log(` @check password (input) ${loginPw}`);
-    console.log(` @check password (existing) ${this.password}`);
+  // checkPassword(loginPw) {
+  //   console.log(` @check password (input) ${loginPw}`);
+  //   console.log(` @check password (existing) ${this.password}`);
 
-    return bcrypt.compareSync(loginPw, this.password);
-  }
+  //   return bcrypt.compareSync(loginPw, this.password);
+  // }
 }
 
 User.init(
@@ -22,28 +22,28 @@ User.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: true,
-      },
+      // unique: true,
+      // validate: {
+      //   isEmail: true,
+      // },
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [8],
-      },
+      // validate: {
+      //   len: [8],
+      // },
     },
   },
   {
-    hooks: {
-      async beforeCreate(newUserData) {
-        console.log(` before create hook, unhashed ${newUserData}`);
-        newUserData.password = await bcrypt.hash(newUserData.password, 10);
-        console.log(` before create hook, hashed password ${newUserData}`);
-        return newUserData;
-      },
-    },
+    // hooks: {
+    //   async beforeCreate(newUserData) {
+    //     console.log(` before create hook, unhashed ${newUserData}`);
+    //     newUserData.password = await bcrypt.hash(newUserData.password, 10);
+    //     console.log(` before create hook, hashed password ${newUserData}`);
+    //     return newUserData;
+    //   },
+    // },
     sequelize,
     timestamps: true,
     freezeTableName: true,
