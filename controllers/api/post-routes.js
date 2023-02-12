@@ -8,20 +8,23 @@ const { User, Team, Project } = require('../../models/index');
 
 
 
-// const storeUserData = (req, res, next) => {
-//   req.session.user = {
-//     id: 1,
-//     username: 'johndoe',
-//     email: 'johndoe@example.com'
-//   };
-//   next();
-// };
 
 //---------------User----------------
 //login
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
+  try {
+    const dbUser = await User.findOne({
+      where: {
+        email: req.body.email,
+      }
+    });
 
-  res.json({message: 'Post login'})
+    res.json(dbUser)
+  } catch (error) {
+    
+  }
+
+  // res.json({message: 'Post login'})
 })
 //logout
 router.post('/logout', (req, res) => {

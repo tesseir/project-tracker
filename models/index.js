@@ -7,7 +7,11 @@ const sequelize = require("../config/connection");
 
 
 
-class User extends Model {}
+class User extends Model {
+  checkPassword(loginPw) {
+    return bcrypt.compareSync(loginPw, this.password);
+  }
+}
 User.init(
   {
     id: {
@@ -29,7 +33,16 @@ User.init(
       allowNull: false,
     },
   },
-  { sequelize, modelName: "user" }
+  { 
+    hooks:{
+      async beforeCreate(newUserData) {
+        newUserData.password = await bcrypt.hash(newUserData.password, 10);
+        return newUserData;
+      },
+    },
+    sequelize,
+    timestamps: true,
+    modelName: "user" }
 );
 
 class Team extends Model {}
@@ -45,7 +58,9 @@ Team.init(
       allowNull: false,
     },
   },
-  { sequelize, modelName: "team" }
+  { 
+    sequelize,
+    modelName: "team" }
 );
 
 class Project extends Model {}
