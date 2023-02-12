@@ -19,7 +19,16 @@ router.post('/login', async (req, res) => {
       }
     });
 
-    res.json(dbUser)
+    if(!dbUser) {
+      res
+        .status(404)
+        .json({message: 'incorrect email'})
+      return;
+    }
+
+    const validPassword = (dbUser.password == req.body.password)
+
+    res.json(validPassword)
   } catch (error) {
     
   }
