@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { User, Team, Project } = require('../../models/index');
+const bcrypt = require('bcrypt')
 
 
 
@@ -18,22 +19,43 @@ router.post('/login', async (req, res) => {
         email: req.body.email,
       }
     });
-
+//if email doesn't exist in db
     if(!dbUser) {
       res
-        .status(404)
+        .status(400)
         .json({message: 'incorrect email'})
       return;
     }
+//compare password
+//will add bcrypt compare
+const validPassword = dbUser.checkPassword(req.body.password);
 
-    const validPassword = (dbUser.password == req.body.password)
+    if(!validPassword){
+      res
+        .status(400)
+        .json({message: 'invalid password'})
+      return;
+      }
+//if password matches, then user data is saved in session store
+    req.session.save(() => {
+      req.session.loggedIn = true,
+      req.session.user = {
+        id: dbUser.id,
+        username: dbUser.name,
+        email: dbUser.email
+      }
+    });
 
-    res.json(validPassword)
+    res
+      .status(200)
+      .json({user: dbUser, message: 'you are now logged in'})
+
   } catch (error) {
-    
+    console.log(error);
+    res
+      .status(500)
+      .json(error)
   }
-
-  // res.json({message: 'Post login'})
 })
 //logout
 router.post('/logout', (req, res) => {
@@ -61,7 +83,7 @@ router.post('/signup', async (req, res) => {
     console.log(error);
     res.status(500).json(error)
   }
-  res.json({message: 'Post signup'})
+
 })
 
 
