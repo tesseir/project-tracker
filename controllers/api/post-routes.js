@@ -1,8 +1,26 @@
 const router = require('express').Router();
-const { User, Team, Project } = require('../models');
+const { User, Team, Project } = require('../../models/index');
+
+
+
+
+
+
+
+
+// const storeUserData = (req, res, next) => {
+//   req.session.user = {
+//     id: 1,
+//     username: 'johndoe',
+//     email: 'johndoe@example.com'
+//   };
+//   next();
+// };
+
 //---------------User----------------
 //login
 router.post('/login', (req, res) => {
+
   res.json({message: 'Post login'})
 })
 //logout
@@ -10,7 +28,27 @@ router.post('/logout', (req, res) => {
   res.json({message: 'Post logout'})
 })
 //signup
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
+  try {
+    const newUser = User.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: req.body.password
+    })
+    req.session.save(() =>{
+      req.session.loggedIn = true,
+      req.session.user = {
+        id: newUser.id,
+        username: newUser.name,
+        email: newUser.email
+      }
+
+      res.status(200).json("it worked!");
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error)
+  }
   res.json({message: 'Post signup'})
 })
 
