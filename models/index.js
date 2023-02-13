@@ -22,3 +22,7 @@ Team.hasMany(User, {
 Node.hasMany(Node, { as: 'children', foreignKey: 'parentId' });
 Node.belongsTo(Node, { as: 'parent', foreignKey: 'parentId' });
 
+module.exports =
+{
+  User, Team, Project, Mindmap, Node
+}
