@@ -57,11 +57,21 @@ const validPassword = dbUser.checkPassword(req.body.password);
       .json(error)
   }
 })
+
+
 //logout
 router.post('/logout', (req, res) => {
-  res.json({message: 'Post logout'})
-})
+  if (req.session.loggedIn) {
+    req.session.destroy(() => {
+      res.status(204).end();
+    });
+  } else {
+    res.status(404).end();
+  }
+});
 //signup
+
+
 router.post('/signup', async (req, res) => {
   try {
     const newUser = User.create({
@@ -89,8 +99,19 @@ router.post('/signup', async (req, res) => {
 
 //-------------Team-------------------
 //create team
-router.post('/team', (req, res) => {
-  res.json({message: 'Post team'})
+router.post('/team', async (req, res) => {
+  try {
+    const newTeam = await Team.create({
+      name: req.body.name
+    });
+    res
+      .status(200)
+      .json({team: newTeam, message: 'team created'})
+  } catch (error) {
+    
+  }
+
+  // res.json({message: 'Post team'})
 })
 //update team
 router.put('/team/:id', (req, res) => {
