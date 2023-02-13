@@ -1,3 +1,189 @@
-<div id='mindmap-container'></div>
+<link
+  type='text/css'
+  rel='stylesheet'
+  href='//cdn.jsdelivr.net/npm/jsmind/style/jsmind.css'
+/>
+<link rel='stylesheet' href='/css/mindmap.css' />
 
-<script src='../assets/js/mindmap.js'></script>
+<div id='layout'>
+  <div id='mindmap-nav'>
+    <div>1. Open</div>
+    <ol type='A'>
+      <li><button onclick='open_json();'>open example</button></li>
+      <li><button onclick='open_ajax();'>open remote</button></li>
+      <li>
+        <button onclick="prompt_info('see 6.Multi Format');">
+          open local file
+        </button>
+      </li>
+      <li>
+        <button onclick="prompt_info('see 6.Multi Format');">
+          save local file
+        </button>
+      </li>
+      <li><button onclick='screen_shot();'>screenshot</button></li>
+    </ol>
+    <div>2. Select &amp; Toggle</div>
+    <ol type='A'>
+      <li><button onclick='select_node();'>select a node</button></li>
+      <li>
+        <button onclick="prompt_info('please try click a node');">
+          try click a node
+        </button>
+      </li>
+      <li><button onclick='show_selected();'>get the selected</button></li>
+    </ol>
+    <div>3. Edit</div>
+    <ol type='A'>
+      <li><button onclick='toggle_editable(this);'>disable editable</button></li>
+      <li><button onclick='add_node();'>add a node</button></li>
+      <li><button onclick='add_image_node();'>add a image node</button></li>
+      <li><button onclick='modify_node();'>modify node</button></li>
+      <li>
+        <button onclick="prompt_info('please try double click a node');">
+          try double click
+        </button>
+      </li>
+      <li><button onclick='move_node();'>move a node</button></li>
+      <li><button onclick='move_to_first();'>move to first</button></li>
+      <li><button onclick='move_to_last();'>move to last</button></li>
+      <li><button onclick='remove_node();'>remove node</button></li>
+    </ol>
+    <div>4. Style</div>
+    <ol type='A'>
+      <li><button onclick='change_text_font();'>change font</button></li>
+      <li><button onclick='change_text_color();'>change color</button></li>
+      <li><button onclick='change_background_color();'>change bg-color</button></li>
+      <li><button onclick='change_background_image();'>change background</button></li>
+    </ol>
+    <div>5. Theme</div>
+    <ol type='A'>
+      <li>
+        <select onchange='set_theme(this.value);'>
+          <option value=''>default</option>
+          <option value='primary'>primary</option>
+          <option value='warning'>warning</option>
+          <option value='danger'>danger</option>
+          <option value='success'>success</option>
+          <option value='info'>info</option>
+          <option value='greensea' selected='selected'>greensea</option>
+          <option value='nephrite'>nephrite</option>
+          <option value='belizehole'>belizehole</option>
+          <option value='wisteria'>wisteria</option>
+          <option value='asphalt'>asphalt</option>
+          <option value='orange'>orange</option>
+          <option value='pumpkin'>pumpkin</option>
+          <option value='pomegranate'>pomegranate</option>
+          <option value='clouds'>clouds</option>
+          <option value='asbestos'>asbestos</option>
+        </select>
+      </li>
+    </ol>
+    <div>6. Adjusting</div>
+    <ol type='A'>
+      <li>
+        <button onclick='change_container();'>resize container</button>
+        <button onclick='resize_jsmind();'>adusting</button>
+      </li>
+      <li>expand/collapse</li>
+      <ol>
+        <li><button class='sub' onclick='expand();'>expand node</button></li>
+        <li><button class='sub' onclick='collapse();'>collapse node</button></li>
+        <li><button class='sub' onclick='toggle();'>toggle node</button></li>
+        <li>
+          <button class='sub' onclick='expand_to_level2();'>
+            expand to level 2
+          </button>
+        </li>
+        <li>
+          <button class='sub' onclick='expand_to_level3();'>
+            expand to level 3
+          </button>
+        </li>
+        <li><button class='sub' onclick='expand_all();'>expand all</button></li>
+        <li><button class='sub' onclick='collapse_all();'>collapse all</button></li>
+      </ol>
+      <li>zoom(ctrl+mousewheel)</li>
+      <button
+        id='zoom-in-button'
+        style='width: 50px'
+        onclick='zoomIn();'
+      >In</button>
+      <button id='zoom-out-button' style='width: 50px' onclick='zoomOut();'>
+        Out
+      </button>
+    </ol>
+
+    <div>7. Multi Format</div>
+    <ol type='A'>
+      <li>node_tree(default)</li>
+      <ol>
+        <li><button class='sub' onclick='show_data();'>show data</button></li>
+        <li><button class='sub' onclick='save_file();'>save file</button></li>
+        <li><input id='file_input' class='file_input' type='file' /></li>
+        <li><button class='sub' onclick='open_file();'>open file</button></li>
+      </ol>
+      <li>node_array</li>
+      <ol>
+        <li>
+          <button class='sub' onclick='get_nodearray_data();'>show data</button>
+        </li>
+        <li>
+          <button class='sub' onclick='save_nodearray_file();'>save file</button>
+        </li>
+        <li><input
+            id='file_input_nodearray'
+            class='file_input'
+            type='file'
+          /></li>
+        <li><button class='sub' onclick='open_nodearray();'>open file</button></li>
+      </ol>
+      <li>freemind(.mm)</li>
+      <ol>
+        <li>
+          <button class='sub' onclick='get_freemind_data();'>show data</button>
+        </li>
+        <li>
+          <button class='sub' onclick='save_freemind_file();'>save file</button>
+        </li>
+        <li><input
+            id='file_input_freemind'
+            class='file_input'
+            type='file'
+          /></li>
+        <li><button class='sub' onclick='open_freemind();'>open file</button></li>
+      </ol>
+      <li>text</li>
+      <ol>
+        <li>
+          <button class='sub' onclick='get_text_data();'>show data</button>
+        </li>
+        <li>
+          <button class='sub' onclick='save_text_file();'>save file</button>
+        </li>
+        <li><input id='file_input_text' class='file_input' type='file' /></li>
+        <li><button class='sub' onclick='open_text();'>open file</button></li>
+      </ol>
+    </ol>
+  </div>
+
+  <div id='mindmap-container'>
+  </div>
+  <div style='display: none'>
+    <input class='file' type='file' id='image-chooser' accept='image/*' />
+  </div>
+</div>
+
+<script
+  type='text/javascript'
+  src='//cdn.jsdelivr.net/npm/jsmind/es6/jsmind.js'
+></script>
+<script
+  type='text/javascript'
+  src='//cdn.jsdelivr.net/npm/jsmind/es6/jsmind.draggable-node.js'
+></script>
+<script
+  type='text/javascript'
+  src='//cdn.jsdelivr.net/npm/jsmind/es6/jsmind.screenshot.js'
+></script>
+<script src='/js/mindmap.js'></script>
