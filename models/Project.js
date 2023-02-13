@@ -17,10 +17,6 @@ Project.init(
     team_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      references: {
-        model: 'Team',
-        key: 'id',
-      },
     },
   },
   {
