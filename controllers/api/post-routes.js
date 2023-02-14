@@ -7,14 +7,14 @@ router.post('/login', async (req, res) => {
   try {
     const dbUser = await User.findOne({
       where: {
-        email: req.body.email,
+        username: req.body.username,
       }
     });
 //if email doesn't exist in db
     if(!dbUser) {
       res
         .status(400)
-        .json({message: 'incorrect email'})
+        .json({message: 'incorrect username'})
       return;
     }
 //compare password
@@ -49,7 +49,7 @@ const validPassword = dbUser.checkPassword(req.body.password);
 router.post('/logout', (req, res) => {
   if (req.session.loggedIn) {
     req.session.destroy(() => {
-      res.status(204).end();
+      res.status(204).json({message: 'logged out'}).end();
     });
   } else {
     res.status(404).end();

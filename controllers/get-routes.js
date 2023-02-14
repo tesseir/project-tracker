@@ -19,6 +19,15 @@ router.get("/login", (req, res) => {
   res.render("loginpage");
 });
 
+router.get("/logout", (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("homepage");
+});
+
+
 router.get("/mindmap", (req, res) => {
   if(req.session.mindmap) {
     res.redirect("/");
