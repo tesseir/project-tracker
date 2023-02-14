@@ -1,14 +1,17 @@
 const router = require('express').Router();
+const path = require('path');
 const { User, Team, Project, Mindmap, Node } = require('../models');
 //connection signal
 router.get('/', (req, res) => {
   res.json({ message: 'reached controllers/getRoutes' });
+  res.sendFile(path.join(__dirname, '../public/homepage.html'));
 });
 
 //get home
 router.get('/', (req, res) => {
   res.json({ message: 'reached home' });
-});
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
 
 //get team
 router.get('/team', (req, res) => {
