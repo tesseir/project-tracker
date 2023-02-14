@@ -2,15 +2,20 @@ const router = require('express').Router();
 const path = require('path');
 const { User, Team, Project, Mindmap, Node } = require('../models');
 //connection signal
-router.get('/', (req, res) => {
-  res.json({ message: 'reached controllers/getRoutes' });
-  res.sendFile(path.join(__dirname, '../public/homepage.html'));
-});
 
+router.get("/login", (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("loginpage");
+});
 //get home
 router.get('/', (req, res) => {
-  res.json({ message: 'reached home' });
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+  res.render("homepage")
+  // res.json({ message: 'reached home' });
+
+  // res.sendFile(path.join(__dirname, '../public/homepage.html'));
   });
 
 //get team

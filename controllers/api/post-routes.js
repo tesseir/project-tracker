@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Team, Project } = require('../models');
+const { User, Team, Project } = require('../../models');
 //---------------User----------------
 //login
 
@@ -29,12 +29,7 @@ const validPassword = dbUser.checkPassword(req.body.password);
       }
 //if password matches, then user data is saved in session store
     req.session.save(() => {
-      req.session.loggedIn = true,
-      req.session.user = {
-        id: dbUser.id,
-        username: dbUser.name,
-        email: dbUser.email
-      }
+      req.session.loggedIn = true
     });
 
     res
@@ -72,20 +67,18 @@ router.post('/signup', async (req, res) => {
     })
     req.session.save(() =>{
       req.session.loggedIn = true,
-      req.session.user = {
-        id: newUser.id,
-        username: newUser.name,
-        email: newUser.email
-      }
+
 
       res.status(200).json("it worked!");
     })
   } catch (error) {
     console.log(error);
-    res.status(500).json(error)
+    res.status(500).json({message: error})
   }
 
 })
+
+//update user
 
 
 //-------------Team-------------------
