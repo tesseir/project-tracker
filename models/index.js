@@ -17,8 +17,6 @@ Project.belongsTo(Team, {
 })
 
 Team.hasMany(User, {
-  foreignKey: 'user_id',
-  as: 'users',
   onDelete: 'cascade'
 })
 
