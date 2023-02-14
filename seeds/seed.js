@@ -5,8 +5,7 @@ const seedData = async () => {
   const mindmap = await Mindmap.create({ name: 'Mindmap 1' });
 
   const rootNode = await Node.create({
-    id: 'root',
-    index: 0,
+    id: 0,
     topic: 'Root Node',
     isroot: true,
     direction: 'center',
@@ -16,8 +15,7 @@ const seedData = async () => {
   });
 
   const node1 = await Node.create({
-    id: 'node1',
-    index: 1,
+    id: 1,
     topic: 'Node 1',
     isroot: false,
     direction: 'left',
@@ -28,8 +26,7 @@ const seedData = async () => {
   });
 
   const node2 = await Node.create({
-    id: 'node2',
-    index: 2,
+    id: 2,
     topic: 'Node 2',
     isroot: false,
     direction: 'right',
@@ -40,8 +37,7 @@ const seedData = async () => {
   });
 
   const node3 = await Node.create({
-    id: 'node3',
-    index: 3,
+    id: 3,
     topic: 'Node 3',
     isroot: false,
     direction: 'left',
@@ -52,8 +48,7 @@ const seedData = async () => {
   });
 
   const node4 = await Node.create({
-    id: 'node4',
-    index: 4,
+    id: 4,
     topic: 'Node 4',
     isroot: false,
     direction: 'right',
