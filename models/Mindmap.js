@@ -4,8 +4,17 @@ const sequelize = require("../config/connection");
 
 class Mindmap extends Model {}
 Mindmap.init({
-  name: DataTypes.STRING,
-}, { sequelize, modelName: "Mindmap" });
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  name:{
+    type: DataTypes.STRING
+  }
+}, 
+{ sequelize,
+  modelName: "Mindmap" });
 
 
 

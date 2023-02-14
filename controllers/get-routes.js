@@ -20,14 +20,6 @@ router.get('/project', (req, res) => {
   res.json({ message: 'reached controllers/getRoutes' });
 });
 
-//get all mind maps
-router.get('/mindmap', (req, res) => {
-  const mindmap = Mindmap.findAll()
-  
-
-
-  res.json({mindmap});
-});
 
 
 
@@ -47,14 +39,14 @@ router.get('/mindmap/:id', async (req, res) => {
   try {
     const mindmap = await Mindmap.findOne({
       where: { id: req.params.id },
-      // include: [{ model: Node, as: "nodes", hierarchy: true }]
     });
+    const nodes = await Node.findAll()
 
     if (!mindmap) {
       return res.status(404).json({ message: "Mindmap not found" });
     }
 
-    return res.status(200).json({ mindmap });
+    return res.status(200).json({ nodes  });
   } catch (err) {
     return res.status(500).json({ message: err });
   }

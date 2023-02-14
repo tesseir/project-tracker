@@ -5,12 +5,14 @@ class Node extends Model {}
 Node.init(
   {
     id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true
     },
-    index: DataTypes.INTEGER,
-    topic: DataTypes.STRING,
-    isroot: DataTypes.BOOLEAN,
+    topic:{ 
+      type: DataTypes.STRING},
+    isroot: {
+     type: DataTypes.BOOLEAN},
     direction: {
       type: DataTypes.ENUM,
       values: ['left', 'center', 'right'],
