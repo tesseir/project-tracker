@@ -11,14 +11,21 @@ const Node = require('./Node')
 // */
 Project.belongsTo(Team, {
   foreignKey: 'team_id',
-  as: 'team'
+  as: 'team',
+  onDelete: 'set null'
+
 })
 
 Team.hasMany(User, {
   foreignKey: 'user_id',
-  as: 'users'
+  as: 'users',
+  onDelete: 'cascade'
 })
 
 Node.hasMany(Node, { as: 'children', foreignKey: 'parentId' });
 Node.belongsTo(Node, { as: 'parent', foreignKey: 'parentId' });
 
+module.exports =
+{
+  User, Team, Project, Mindmap, Node
+}

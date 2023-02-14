@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { User, Team, Project } = require('../models');
+const { User, Team, Project, Mindmap, Node } = require('../models');
 //connection signal
 router.get('/', (req, res) => {
   res.json({ message: 'reached controllers/getRoutes' });
@@ -20,14 +20,38 @@ router.get('/project', (req, res) => {
   res.json({ message: 'reached controllers/getRoutes' });
 });
 
-//get resources
-router.get('/resources', (req, res) => {
-  res.json({ message: 'reached controllers/getRoutes' });
-});
 
-router.get('/mindmap', (req, res) => {
-  res.render('mindmap');
-});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.get('/mindmap/:id', async (req, res) => {
+  try {
+    const mindmap = await Mindmap.findOne({
+      where: { id: req.params.id },
+    });
+    const nodes = await Node.findAll()
+
+    if (!mindmap) {
+      return res.status(404).json({ message: "Mindmap not found" });
+    }
+
+    return res.status(200).json({ nodes  });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+})
+
 
 //---------------------------------------------------------Users
 //get all users
@@ -65,41 +89,7 @@ example response:
 	},
 */
 
-//---------------------------------------------------------Users
-//get all users
-router.get('/user', async (req, res) => {
-  const userData = await User.findAll().catch((err) => {
-    res.json(err)
-  });
-  const users = userData.map((user) =>user.get({plain: true}))
-  res.json({users})
-})
 
-//get a user
-router.get('/user/:id', async (req, res) => {
-  try {
-    const userData = await User.findByPk(req.params.id);
-    if(!userData) {
-      res.status(404).json({message: 'no user with this id'})
-      return;
-    }
-    const user = userData.get({plain: true});
-    res.json({user})
-  } catch (error) {
-    res.status(505).json(err)
-  }
-})
-/*
-example response:
-{
-		"id": 1,
-		"name": "John Doe",
-		"email": "john.doe@example.com",
-		"password": "password123",
-		"createdAt": "2023-02-11T23:01:05.000Z",
-		"updatedAt": "2023-02-11T23:01:05.000Z"
-	},
-*/
 
 //get all projects
 router.get('/project', async (req, res) => {
