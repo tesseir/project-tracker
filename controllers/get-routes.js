@@ -3,13 +3,6 @@ const path = require('path');
 const { User, Team, Project, Mindmap, Node } = require('../models');
 //connection signal
 
-router.get("/login", (req, res) => {
-  if (req.session.loggedIn) {
-    res.redirect("/");
-    return;
-  }
-  res.render("loginpage");
-});
 //get home
 router.get('/', (req, res) => {
   res.render("homepage")
@@ -18,15 +11,28 @@ router.get('/', (req, res) => {
   // res.sendFile(path.join(__dirname, '../public/homepage.html'));
   });
 
-//get team
-router.get('/team', (req, res) => {
-  res.json({ message: 'reached controllers/getRoutes' });
+router.get("/login", (req, res) => {
+  if (req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("loginpage");
 });
 
-//get project
-router.get('/project', (req, res) => {
-  res.json({ message: 'reached controllers/getRoutes' });
+router.get("/mindmap", (req, res) => {
+  if(req.session.mindmap) {
+    res.redirect("/");
+    return;
+  }
+  res.render("mindmap");
 });
+
+//get team
+// router.get('/team', (req, res) => {
+//   res.json({ message: 'reached controllers/getRoutes' });
+// });
+
+
 
 
 
