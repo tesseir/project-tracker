@@ -1,57 +1,49 @@
- <style>
-    * {
-  box-sizing: border-box;
-	font-style: normal;
-    }
-    body {
-    background-color: #1e2124;
-	  color: #fff;
-    }
-    h1 {
-      text-align: center;
-      margin-top: 100px;
-      margin-bottom: 100px;
-    }
-    .navbar {
-      color: #92ADCD;
-    }
-  </style>
+<link rel="stylesheet" 
+      href="/css/main.css">
+ <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+      crossorigin="anonymous"/>
 
-  <h1 class="page-header">Easy Project-Tracker</h1> 
+<header>
+  <h1 class="title">Easy Project-Tracker</h1>
+  <p class="subtitle">Created by: Maxwell, Tess, Grayson, Cong, Liz</p>
+</header>
 
-  <nav class="navbar bg-info">
-    <form class="searchbar" action="#">
-      <input type="text" placeholder="Search">
-      <button type="text" class="gobtn go">Go</button>
+<nav class="navbar bg">
+  <div class="container-fluid">
+    <a class="nav-link btn" id="loginbtn" href="/login">Login</a>
+    <a class="nav-link btn hidden" id="logoutbtn" href="/logout">Logout</a>
+    <p class="">logged in as: add username here</p>
+    <form class="d-flex" role="search">
+      <input class="form-control me-2" type="search" placeholder="Search"
+        aria-label="Search">
+      <button class="btn btn-outline-success" type="submit">Search</button>
     </form>
-    <div>
-        <a class="nav-link" id="loginbtn" href="/login">Login</a>
-        <a class="nav-link" id="logoutbtn" href="/logout">Logout</a>
-      <!-- <a href="#">Log In</a>
-      <a href="#">Sign Up</a> -->
-    </div>
-  </nav>
+  </div>
+</nav>
 
 <div class="container">
 
   <div class="card" style="width: 18rem;">
-    <img class="card-img-top" src="..." alt="Card image cap">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="/mindmap" class="btn btn-primary">View Project</a>
-      </div>
+    <img class="card-img-top" src="/assets/150x150-2-500x500.png" alt="Card image cap">
+    <div class="card-body">
+      <a href="/mindmap" class="btn btn-primary">Project Title. Click to view</a>
+      <button class="fas fa-trash-alt float-right text-danger deleteBtn"></button>
+    </div>
   </div>
 
 </div>
-  <!-- <div class="container">
+<!-- <div class="container">
     <div style="margin-top: 80px;" class="text-center p-5 mb-4 bg-light">
        
     </div>
   </div> -->
 
-   <footer> 
-    <p>Created by: Maxwell, Tess, Grayson, Cong, Liz </p>
-  </footer>
+<footer>
+  <p class="footertxt">Its dark because its kind to the eyes and the planet! Live in
+    darkness!</p>
+</footer>
 
-  <script src="/js/index.js"></script>
+<script src="/js/index.js"></script>
