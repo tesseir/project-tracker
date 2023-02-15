@@ -67,7 +67,14 @@ body {
 
 .login-card {
   display: flex;
+}
 
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 35%;
+  margin-top: -50px;
+  margin-left: -100px;
 }
 
     /* .navbar {
