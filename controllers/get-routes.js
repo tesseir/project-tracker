@@ -6,11 +6,9 @@ const withAuth = require('../utils/auth')
 
 //get home
 router.get('/', (req, res) => {
-  
-  res.render('homepage');
-  // res.json({ message: 'reached home' });
+  console.log(req.session.loggedIn)
+  res.render('homepage', {  loggedIn: req.session.loggedIn,});
 
-  // res.sendFile(path.join(__dirname, '../public/homepage.html'));
 });
 
 router.get('/login', (req, res) => {
@@ -21,17 +19,17 @@ router.get('/login', (req, res) => {
   res.render('loginpage');
 });
 
-router.get('/logout', (req, res) => {
-  if (!req.session.loggedIn) {
-    res.redirect('/');
-    return;
-  }
-  res.render('homepage');
-});
+// router.get('/logout', (req, res) => {
+//   if (!req.session.loggedIn) {
+//     res.redirect('/');
+//     return;
+//   }
+//   res.render('homepage');
+// });
 
 router.get('/mindmap', (req, res) => {
-  if (req.session.loggedIn) {
-    res.redirect('/');
+  if (!req.session.loggedIn) {
+    res.redirect('/login');
     return;
   }
   res.render('mindmap');
