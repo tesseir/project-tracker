@@ -5,104 +5,85 @@ const { User, Team, Project, Mindmap, Node } = require('../models');
 
 //get home
 router.get('/', (req, res) => {
-  res.render("homepage")
+  res.render('homepage');
   // res.json({ message: 'reached home' });
 
   // res.sendFile(path.join(__dirname, '../public/homepage.html'));
-  });
+});
 
-router.get("/login", (req, res) => {
+router.get('/login', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect("/");
+    res.redirect('/');
     return;
   }
-  res.render("loginpage");
+  res.render('loginpage');
 });
 
-router.get("/logout", (req, res) => {
+router.get('/logout', (req, res) => {
   if (!req.session.loggedIn) {
-    res.redirect("/");
+    res.redirect('/');
     return;
   }
-  res.render("homepage");
+  res.render('homepage');
 });
 
-
-router.get("/mindmap", (req, res) => {
-  if(req.session.mindmap) {
-    res.redirect("/");
+router.get('/mindmap', (req, res) => {
+  if (req.session.mindmap) {
+    res.redirect('/');
     return;
   }
-  res.render("mindmap");
+  res.render('mindmap');
 });
 
 // get team
 router.get('/team', async (req, res) => {
- const teams = await Team.findAll().catch((err) => {
-  res.json(err);
+  const teams = await Team.findAll().catch((err) => {
+    res.json(err);
+  });
+  res.json(teams);
 });
-res.json(teams)
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 router.get('/mindmap/:id', async (req, res) => {
   try {
     const mindmap = await Mindmap.findOne({
       where: { id: req.params.id },
     });
-    const nodes = await Node.findAll()
+    const nodes = await Node.findAll();
 
     if (!mindmap) {
-      return res.status(404).json({ message: "Mindmap not found" });
+      return res.status(404).json({ message: 'Mindmap not found' });
     }
 
-    return res.status(200).json({ nodes  });
+    return res.status(200).json({ nodes });
   } catch (err) {
     return res.status(500).json({ message: err });
   }
-})
-
+});
 
 //---------------------------------------------------------Users
 //get all users
 router.get('/user', async (req, res) => {
   const userData = await User.findAll().catch((err) => {
-    res.json(err)
+    res.json(err);
   });
-  const users = userData.map((user) =>user.get({plain: true}))
-  res.json({users})
-})
+  const users = userData.map((user) => user.get({ plain: true }));
+  res.json({ users });
+});
 
 //get a user
 router.get('/user/:id', async (req, res) => {
   try {
     const userData = await User.findByPk(req.params.id);
-    if(!userData) {
-      res.status(404).json({message: 'no user with this id'})
+    if (!userData) {
+      res.status(404).json({ message: 'no user with this id' });
       return;
     }
-    const user = userData.get({plain: true});
-    res.json({user})
+    const user = userData.get({ plain: true });
+    res.json({ user });
   } catch (error) {
-    res.status(505).json(err)
+    res.status(505).json(err);
   }
-})
+});
 /*
 example response:
 {
@@ -115,30 +96,29 @@ example response:
 	},
 */
 
-
-
 //get all projects
 router.get('/project', async (req, res) => {
   const projectData = await Project.findAll().catch((err) => res.json(err));
 
-  const projects = projectData.map((project) => project.get({plain:true}));
-  res.json({projects})
-})
+  const projects = projectData.map((project) => project.get({ plain: true }));
+  res.json({ projects });
+});
 
 //get single project
- router.get('/project/:id', async (req, res) => {
+router.get('/project/:id', async (req, res) => {
   try {
     const projectData = await Project.findByPk(req.params.id);
-    if (!projectData){
-      res.status(404).json({message: 'no project by that id'});
-    return;
+    if (!projectData) {
+      res.status(404).json({ message: 'no project by that id' });
+      return;
     }
-    const project = projectData.get({plain: true});
-    res.json({project})
+    const project = projectData.get({ plain: true });
+    res.json({ project });
   } catch (error) {
-    res.status(500).json(error)
+    res.status(500).json(error);
   }
- })
+});
+
 /*
 example:
 	"project": {

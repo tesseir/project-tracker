@@ -10,7 +10,7 @@ Project.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    Project_name: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -27,6 +27,7 @@ Project.init(
     modelName: 'Project',
   }
 );
-console.log(`Project model connection =`)
-console.log(Project === sequelize.models.Project)
-module.exports = Project
+
+console.log(`Project model connection =`);
+console.log(Project === sequelize.models.Project);
+module.exports = Project;
