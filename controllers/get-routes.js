@@ -19,6 +19,15 @@ router.get("/login", (req, res) => {
   res.render("loginpage");
 });
 
+router.get("/logout", (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect("/");
+    return;
+  }
+  res.render("homepage");
+});
+
+
 router.get("/mindmap", (req, res) => {
   if(req.session.mindmap) {
     res.redirect("/");
@@ -27,10 +36,13 @@ router.get("/mindmap", (req, res) => {
   res.render("mindmap");
 });
 
-//get team
-// router.get('/team', (req, res) => {
-//   res.json({ message: 'reached controllers/getRoutes' });
-// });
+// get team
+router.get('/team', async (req, res) => {
+ const teams = await Team.findAll().catch((err) => {
+  res.json(err);
+});
+res.json(teams)
+});
 
 
 
