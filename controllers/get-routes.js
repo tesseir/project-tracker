@@ -1,10 +1,12 @@
 const router = require('express').Router();
 const path = require('path');
 const { User, Team, Project, Mindmap, Node } = require('../models');
+const withAuth = require('../utils/auth')
 //connection signal
 
 //get home
 router.get('/', (req, res) => {
+  
   res.render('homepage');
   // res.json({ message: 'reached home' });
 
@@ -28,7 +30,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/mindmap', (req, res) => {
-  if (req.session.mindmap) {
+  if (req.session.loggedIn) {
     res.redirect('/');
     return;
   }
