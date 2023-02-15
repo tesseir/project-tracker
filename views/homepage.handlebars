@@ -8,26 +8,40 @@
   <p class="subtitle">Created by: Maxwell, Tess, Grayson, Cong, Liz</p>
 </header>
 
+
+
 <nav class="navbar bg">
   <div class="container-fluid">
-    <a class="nav-link btn" id="loginbtn" href="/login">Login</a>
-    <a class="nav-link btn hidden" id="logoutbtn" href="/logout">Logout</a>
-    <p class="">logged in as: add username here</p>
+
+    {{#if loggedIn}}
+    <a class="nav-link btn" id="logoutbtn" href="/logout">Logout</a>
+    <p class="">logged in as: {{username}}</p>
     <a href="/mindmap" class="nav-link btn addProject">Start New Project</a>
+    {{else}}
+    <a class="nav-link btn" id="loginbtn" href="/login">Login</a>
+    {{/if}}
+
   </div>
 </nav>
 
-<div class="container row-6">
-  <div classrow-6>
-    <div class="card" style="width: 18rem;">
-      <img class="card-img-top" src="/assets/150x150-2-500x500.png" alt="Card image cap">
-      <div class="card-body">
-        <a href="/mindmap" class="btn btn-primary">Project Title. Click to view</a>
-        <button class="fas fa-trash-alt float-right text-danger deleteBtn"></button>
+
+
+
+
+<div class="container-fluid">
+  <div class="row">
+
+    <div class="offset-1 col-3">
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="/assets/150x150-2-500x500.png" alt="Card image cap">
+        <div class="card-body">
+          <a href="/mindmap" class="btn btn-primary">Project Title. Click to view</a>
+          <button class="fas fa-trash-alt float-right text-danger deleteBtn"></button>
+        </div>
       </div>
     </div>
 
-    <a href="/mindmap" class="fa-duotone fa-plus-large"></a>
+
   </div>
 </div>
 
