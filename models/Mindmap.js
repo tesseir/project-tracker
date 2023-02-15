@@ -1,26 +1,21 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/connection');
+const { Model, DataTypes } = require("sequelize");
+const sequelize = require("../config/connection");
+
 
 class Mindmap extends Model {}
-Mindmap.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    name: {
-      type: DataTypes.STRING,
-    },
-    project_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Project',
-        key: 'id',
-      },
-    },
+Mindmap.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
-  { sequelize, modelName: 'Mindmap' }
-);
+  name:{
+    type: DataTypes.STRING
+  }
+}, 
+{ sequelize,
+  modelName: "Mindmap" });
 
-module.exports = Mindmap;
+
+
+module.exports = Mindmap

@@ -1,6 +1,6 @@
-const { Model, DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
-const sequelize = require('../config/connection');
+const { Model, DataTypes } = require("sequelize");
+const bcrypt = require("bcrypt");
+const sequelize = require("../config/connection");
 
 class Team extends Model {}
 
@@ -10,7 +10,7 @@ Team.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true,
+      autoIncrement: true
     },
     user_id: {
       type: DataTypes.INTEGER,
@@ -20,8 +20,8 @@ Team.init(
       },
     },
   },
-  { sequelize, modelName: 'Team' }
-);
-console.log(`Team model connection =`);
-console.log(Team === sequelize.models.Team);
-module.exports = Team;
+  {sequelize, modelName: 'team'}
+)
+console.log(`Team model connection =`)
+console.log( Team=== sequelize.models.Team)
+module.exports = Team
