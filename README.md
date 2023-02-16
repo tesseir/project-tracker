@@ -2,8 +2,8 @@
 
 # Description
 
-The Project-Tracker is a simple application to...
-We built this project with the coding student in mind. It provides a platform for organizing and project reference all in one place. 
+The Project-Tracker is a simple web application for mindmapping. 
+We built this project with the coders in mind. It provides a platform for organizing and project reference all in one place. 
 
 # Table of Contents
 1. [How it Works](#How-it-Works)
@@ -19,11 +19,13 @@ Once on the homepage, the user would either sign up for an account or log in. A 
 
 # Visuals
 
-screenshots or gif here
+screenshots here
 
 # Link
 
 https://github.com/tesseir/project-tracker
+
+https://project-tracker-app1.herokuapp.com/
 
 # Credits
 
@@ -37,13 +39,16 @@ Elizabeth Gonzalez https://github.com/ElizabethGonzalez11
 
 * HTML
 * CSS
-* JavaScript
 * Express
 * Handlebars
-* 
+* JSmind
+* Bycrypt
+* Cors
+* Sequelize
+* MySQL2
 
 # Wireframing
 
-Excalidraw (link here)
+Excalidraw https://excalidraw.com/#room=895f364c6f9cdd2ff659,Pjsdi5TvF5w0dhuV4mIhFw
 
 
