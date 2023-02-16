@@ -2,6 +2,7 @@ let _jm = null;
 
 // Create a variable to hold the mindmap data from the database
 let _mindmap = null;
+let _project_id = null;
 
 $(document).ready(() => {
   $('#basic-collapse').on('show.bs.collapse', (e) => {
@@ -65,29 +66,53 @@ function open_empty() {
 
 function create_mindmap() {
   const mindmap = _jm.get_data('node_array');
-  fetch('/api/mindmap/save', {
+
+  mindmap.name = document.querySelector('#mindmap-name').value;
+
+  // Call api create project
+  fetch('/api/project', {
     method: 'POST',
-    body: JSON.stringify(mindmap),
+    body: JSON.stringify({ name: mindmap.name }),
     headers: { 'Content-Type': 'application/json' },
   })
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
-      alert('Failed to save mindmap');
+      alert('Failed to create project');
     })
     .then((data) => {
       console.log(data);
-      alert('Mindmap saved successfully');
-    })
-    .catch((err) => {
-      console.log(err);
+      mindmap.project_id = data.project.id;
+
+      // Call api save mindmap
+      fetch('/api/mindmap/save', {
+        method: 'POST',
+        body: JSON.stringify(mindmap),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          alert('Failed to create mindmap');
+        })
+        .then((data) => {
+          console.log(data);
+          document.location.replace(`/mindmap/${data?.mindmap?.id}/edit`);
+          alert('Mindmap created successfully');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
 }
 
 // Render mindmap by route id
 function render_mindmap() {
   const mindmapId = document.querySelector('#mindmap-id').value;
+
+  console.log('mindmapId_render', mindmapId);
 
   if (mindmapId) {
     fetch(`/api/mindmap/${mindmapId}`, {
@@ -106,6 +131,7 @@ function render_mindmap() {
         // Pass mindmap name to the input field
         _mindmap = _jm.get_data('node_array');
         document.querySelector('#mindmap-name').value = data.name;
+        _project_id = data.project_id;
       })
       .catch((err) => {
         console.log(err);
@@ -135,27 +161,36 @@ function update_mindmap(id) {
 
   mindmap.delete_nodes = deletedNodes;
 
-  console.log('mindmap', mindmap);
-
-  // return;
-
-  fetch('/api/mindmap/update', {
+  fetch(`/api/project/${_project_id}`, {
     method: 'PUT',
-    body: JSON.stringify(mindmap),
+    body: JSON.stringify({ name: mindmap.name }),
     headers: { 'Content-Type': 'application/json' },
   })
     .then((response) => {
       if (response.ok) {
         return response.json();
       }
-      alert('Failed to update mindmap');
+      alert('Failed to update project');
     })
     .then((data) => {
-      console.log(data);
-      alert('Mindmap updated successfully');
-    })
-    .catch((err) => {
-      console.log(err);
+      fetch('/api/mindmap/update', {
+        method: 'PUT',
+        body: JSON.stringify(mindmap),
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+          alert('Failed to update mindmap');
+        })
+        .then((data) => {
+          console.log('after update', data);
+          alert('Mindmap updated successfully');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     });
 }
 

@@ -12,13 +12,14 @@ select {
 }
 
 #layout {
-  width: 1230px;
+  width: 100%;
+  height: 100%;
   display: flex;
 }
 
 #mindmap-nav {
   width: 250px;
-  height: 600px;
+  height: 100%;
   border: solid 1px #ccc;
   overflow: auto;
 }
@@ -32,8 +33,8 @@ button.sub {
 }
 
 #mindmap-container {
-  width: 1000px;
-  height: 600px;
+  width: 100%;
+  height: 100%;
   border: solid 1px #ccc;
   background: #f4f4f4;
 }

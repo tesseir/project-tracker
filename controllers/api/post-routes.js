@@ -26,6 +26,7 @@ router.post('/login', async (req, res) => {
     //if password matches, then user data is saved in session store
     req.session.save(() => {
       req.session.loggedIn = true;
+      req.session.user_id = dbUser.id;
       req.session.username = dbUser.username;
       res.status(200).json({ user: dbUser, message: 'you are now logged in' });
     });
@@ -56,7 +57,10 @@ router.post('/signup', async (req, res) => {
 
     console.log('newUser', newUser);
     req.session.save(() => {
-      (req.session.loggedIn = true), res.status(200).json('it worked!');
+      req.session.loggedIn = true;
+      req.session.user_id = newUser.id;
+      req.session.username = newUser.username;
+      res.status(200).json({ user: newUser, message: 'you are now logged in' });
     });
   } catch (error) {
     console.log(error);
@@ -93,7 +97,7 @@ router.post('/project', async (req, res) => {
   try {
     const newProject = await Project.create({
       name: req.body.name,
-      team_id: req.body.team_id,
+      user_id: req.session.user_id,
     });
     res.status(200).json({ project: newProject, message: 'project created' });
   } catch (error) {
@@ -103,12 +107,42 @@ router.post('/project', async (req, res) => {
 });
 
 //update project
-router.put('/project/:id', (req, res) => {
-  res.json({ message: 'Put project' });
+router.put('/project/:id', async (req, res) => {
+  try {
+    const updateProject = await Project.update(
+      {
+        name: req.body.name,
+      },
+      {
+        where: {
+          id: req.params.id,
+        },
+      }
+    );
+    res
+      .status(200)
+      .json({ project: updateProject, message: 'project updated' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
 });
-//delete project
-router.delete('/project/:id', (req, res) => {
-  res.json({ message: 'delete project' });
+
+// Delete project and associated mindmaps and nodes
+router.delete('/project/:id', async (req, res) => {
+  try {
+    const deleteProject = await Project.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res
+      .status(200)
+      .json({ project: deleteProject, message: 'project deleted' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error });
+  }
 });
 
 module.exports = router;
