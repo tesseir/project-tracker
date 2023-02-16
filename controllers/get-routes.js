@@ -19,13 +19,19 @@ router.get('/login', (req, res) => {
   res.render('loginpage');
 });
 
-// router.get('/logout', (req, res) => {
-//   if (!req.session.loggedIn) {
-//     res.redirect('/');
-//     return;
-//   }
-//   res.render('homepage');
-// });
+router.get('/logout', (req, res) => {
+  console.log("attempting to log out");
+  if (req.session.loggedIn) {
+    //todo: kill session variable
+      req.session.destroy(() => {
+      });
+    } else {
+      res.status(404).end();
+    }
+    res.redirect('/login');
+    return;
+
+});
 
 router.get('/mindmap', (req, res) => {
   if (!req.session.loggedIn) {
