@@ -7,9 +7,21 @@ const { User, Team, Project, Mindmap, Node } = require('../models');
 
 
 //get home
-router.get('/', (req, res) => {
-  console.log(req.session.loggedIn);
-  res.render('homepage', { loggedIn: req.session.loggedIn });
+router.get('/', async (req, res) => {
+  const projectData = await Project.findAll({
+    include: [
+      {model: Mindmap,
+      where: {project_id: projects.id}}
+    ]
+  }).catch((err) => res.json(err));
+
+  const projects = projectData.map((project) => project.get({ plain: true }));
+
+  res.render('homepage', { 
+    projects,
+    loggedIn: req.session.loggedIn,
+    
+  });
 });
 
 router.get('/login', (req, res) => {
@@ -77,7 +89,10 @@ router.get('/project', async (req, res) => {
   const projectData = await Project.findAll().catch((err) => res.json(err));
 
   const projects = projectData.map((project) => project.get({ plain: true }));
-  res.json({ projects });
+
+  res
+    .render('')  
+  .json({ projects });
 });
 
 //get single project

@@ -21,26 +21,34 @@
   </div>
 </nav>
 
-<div class='container-fluid'>
-  <div class='row'>
-    <div class='offset-1 col-3'>
-      <div class='card' style='width: 18rem;'>
-        <img
-          class='card-img-top'
-          src='/assets/150x150-2-500x500.png'
-          alt='Card image cap'
-        />
-        <div class='card-body'>
-          <a href='/mindmap' class='btn btn-primary'>Project Title. Click to
-            view</a>
-          <button
-            class='fas fa-trash-alt float-right text-danger deleteBtn'
-          ></button>
+
+
+
+
+<div class="container-fluid">
+  <div class="row">
+
+{{#each projects as |project|}}
+ <div class="col-3">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <a href="/mindmap/{{mindmap.id}}/edit" class="btn btn-primary">{{project.name}}</a>
+        </div>
+      </div>
+    </div>
+{{/each}}
+    
+{{!-- 
+    <div class="offset-1 col-3">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <a href="/mindmap" class="btn btn-primary">Project Title. Click to view</a>
+          <button class="fas fa-trash-alt float-right text-danger deleteBtn"></button>
         </div>
       </div>
     </div>
   </div>
-</div>
+</div>--}}
 
 <script src='/js/index.js'></script>
 <script

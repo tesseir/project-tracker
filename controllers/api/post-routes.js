@@ -70,26 +70,7 @@ router.post('/signup', async (req, res) => {
 
 //update user
 
-//-------------Team-------------------
-//create team
-router.post('/team', async (req, res) => {
-  try {
-    const newTeam = await Team.create({
-      name: req.body.name,
-    });
-    res.status(200).json({ team: newTeam, message: 'team created' });
-  } catch (error) {}
 
-  // res.json({message: 'Post team'})
-});
-//update team
-router.put('/team/:id', (req, res) => {
-  res.json({ message: 'Put team' });
-});
-//delete team
-router.delete('/team/:id', (req, res) => {
-  res.json({ message: 'delete team' });
-});
 
 //------------Project----------------
 // create project

@@ -4,10 +4,7 @@ const Project = require('./Project');
 const Mindmap = require('./Mindmap');
 const Node = require('./Node');
 
-// /*
-// Team.hasMany(Users)
 
-// */
 Project.belongsTo(User, {
   foreignKey: 'user_id',
   as: 'user',
