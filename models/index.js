@@ -20,8 +20,6 @@ User.hasMany(Project, {
   onDelete: 'cascade',
 });
 
-
-
 Project.hasMany(Mindmap, {
   foreignKey: 'project_id',
   as: 'mindmaps',

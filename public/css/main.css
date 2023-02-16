@@ -10,17 +10,17 @@
 
 body {
   background-color: #1e2124;
-	color: #fff;
+  color: #fff;
 }
 
 .title {
   text-align: center;
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .subtitle {
   text-align: center;
-  margin-bottom: 100px;
+  margin-bottom: 50px;
 }
 
 .footertxt {
@@ -28,7 +28,6 @@ body {
   bottom: 5px;
   width: 100%;
   text-align: center;
-
 }
 
 .hidden {
@@ -46,7 +45,7 @@ body {
 
 .btn {
   background-color: #36393e;
-  border:none;
+  border: none;
   padding: 5px;
 }
 
@@ -77,7 +76,7 @@ body {
   margin-left: -100px;
 }
 
-    /* .navbar {
+/* .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
