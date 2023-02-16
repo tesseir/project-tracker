@@ -26,9 +26,9 @@ router.post('/login', async (req, res) => {
     //if password matches, then user data is saved in session store
     req.session.save(() => {
       req.session.loggedIn = true;
+      req.session.username = dbUser.username;
       res.status(200).json({ user: dbUser, message: 'you are now logged in' });
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json(error);

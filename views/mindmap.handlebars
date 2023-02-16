@@ -7,170 +7,205 @@
 
 <div id='layout'>
   <div id='mindmap-nav'>
-    <div>1. Open</div>
-    <ol type='A'>
-      <li><button onclick='open_json();'>open example</button></li>
-      <li><button onclick='open_ajax();'>open remote</button></li>
-      <li>
-        <button onclick="prompt_info('see 6.Multi Format');">
-          open local file
-        </button>
-      </li>
-      <li>
-        <button onclick="prompt_info('see 6.Multi Format');">
-          save local file
-        </button>
-      </li>
-      <li><button onclick='screen_shot();'>screenshot</button></li>
-    </ol>
-    <div>2. Select &amp; Toggle</div>
-    <ol type='A'>
-      <li><button onclick='select_node();'>select a node</button></li>
-      <li>
-        <button onclick="prompt_info('please try click a node');">
-          try click a node
-        </button>
-      </li>
-      <li><button onclick='show_selected();'>get the selected</button></li>
-    </ol>
-    <div>3. Edit</div>
-    <ol type='A'>
-      <li><button onclick='toggle_editable(this);'>disable editable</button></li>
-      <li><button onclick='add_node();'>add a node</button></li>
-      <li><button onclick='add_image_node();'>add a image node</button></li>
-      <li><button onclick='modify_node();'>modify node</button></li>
-      <li>
-        <button onclick="prompt_info('please try double click a node');">
-          try double click
-        </button>
-      </li>
-      <li><button onclick='move_node();'>move a node</button></li>
-      <li><button onclick='move_to_first();'>move to first</button></li>
-      <li><button onclick='move_to_last();'>move to last</button></li>
-      <li><button onclick='remove_node();'>remove node</button></li>
-    </ol>
-    <div>4. Style</div>
-    <ol type='A'>
-      <li><button onclick='change_text_font();'>change font</button></li>
-      <li><button onclick='change_text_color();'>change color</button></li>
-      <li><button onclick='change_background_color();'>change bg-color</button></li>
-      <li><button onclick='change_background_image();'>change background</button></li>
-    </ol>
-    <div>5. Theme</div>
-    <ol type='A'>
-      <li>
-        <select onchange='set_theme(this.value);'>
-          <option value=''>default</option>
-          <option value='primary'>primary</option>
-          <option value='warning'>warning</option>
-          <option value='danger'>danger</option>
-          <option value='success'>success</option>
-          <option value='info'>info</option>
-          <option value='greensea' selected='selected'>greensea</option>
-          <option value='nephrite'>nephrite</option>
-          <option value='belizehole'>belizehole</option>
-          <option value='wisteria'>wisteria</option>
-          <option value='asphalt'>asphalt</option>
-          <option value='orange'>orange</option>
-          <option value='pumpkin'>pumpkin</option>
-          <option value='pomegranate'>pomegranate</option>
-          <option value='clouds'>clouds</option>
-          <option value='asbestos'>asbestos</option>
-        </select>
-      </li>
-    </ol>
-    <div>6. Adjusting</div>
-    <ol type='A'>
-      <li>
-        <button onclick='change_container();'>resize container</button>
-        <button onclick='resize_jsmind();'>adusting</button>
-      </li>
-      <li>expand/collapse</li>
-      <ol>
-        <li><button class='sub' onclick='expand();'>expand node</button></li>
-        <li><button class='sub' onclick='collapse();'>collapse node</button></li>
-        <li><button class='sub' onclick='toggle();'>toggle node</button></li>
-        <li>
-          <button class='sub' onclick='expand_to_level2();'>
-            expand to level 2
-          </button>
-        </li>
-        <li>
-          <button class='sub' onclick='expand_to_level3();'>
-            expand to level 3
-          </button>
-        </li>
-        <li><button class='sub' onclick='expand_all();'>expand all</button></li>
-        <li><button class='sub' onclick='collapse_all();'>collapse all</button></li>
-      </ol>
-      <li>zoom(ctrl+mousewheel)</li>
-      <button
-        id='zoom-in-button'
-        style='width: 50px'
-        onclick='zoomIn();'
-      >In</button>
-      <button id='zoom-out-button' style='width: 50px' onclick='zoomOut();'>
-        Out
-      </button>
-    </ol>
+    <div class='p-3'>
+      {{#if isEdit}}
+        <h4>Edit Mindmap</h4>
+      {{else}}
+        <h4>Create Mindmap</h4>
+      {{/if}}
 
-    <div>7. Multi Format</div>
-    <ol type='A'>
-      <li>node_tree(default)</li>
-      <ol>
-        <li><button class='sub' onclick='show_data();'>show data</button></li>
-        <li><button class='sub' onclick='save_file();'>save file</button></li>
-        <li><input id='file_input' class='file_input' type='file' /></li>
-        <li><button class='sub' onclick='open_file();'>open file</button></li>
-      </ol>
-      <li>node_array</li>
-      <ol>
-        <li>
-          <button class='sub' onclick='get_nodearray_data();'>show data</button>
-        </li>
-        <li>
-          <button class='sub' onclick='save_nodearray_file();'>save file</button>
-        </li>
-        <li><input
+      <!-- Show input for mindmap name -->
+      <input
+        type='text'
+        class='form-control'
+        id='mindmap-name'
+        placeholder='Mindmap Name'
+        value='{{mindmapName}}'
+      />
+
+      <div class='py-2 text-end'>
+        {{#if isEdit}}
+          <button
+            class='btn btn-secondary'
+            onclick='update_mindmap({{mindmapId}});'
+          >
+            <i class='fas fa-edit me-1'></i>Update
+          </button>
+        {{else}}
+          <button class='btn btn-secondary' onclick='create_mindmap();'>
+            <i class='fas fa-plus me-1'></i>Create
+          </button>
+        {{/if}}
+      </div>
+    </div>
+
+    <!-- Basic Node collapse section -->
+    <div class='p-3'>
+      <div
+        class='collapse-header'
+        data-bs-toggle='collapse'
+        data-bs-target='#basic-collapse'
+        aria-expanded='true'
+        aria-controls='basic-collapse'
+      >
+        <span class='collapse-button'>
+          Basic Node
+        </span>
+        <i class='fas fa-chevron-right'></i>
+      </div>
+      <div class='collapse show' id='basic-collapse'>
+        <div class='py-1'>
+          <button class='btn btn-secondary w-100' onclick='add_node();'>
+            <i class='fas fa-plus me-1'></i>
+            Add
+          </button>
+        </div>
+        <div class='py-1'>
+          <button class='btn btn-secondary w-100' onclick='remove_node();'>
+            <i class='fas fa-trash-alt me-1'></i>
+            Delete
+          </button>
+        </div>
+        <div class='py-1'>
+          <button
+            id='zoom-in-button'
+            class='btn btn-secondary w-100'
+            onclick='zoom_in();'
+          >
+            <i class='fas fa-search-plus me-1'></i>
+            Zoom In
+          </button>
+        </div>
+        <div class='py-1'>
+          <button
+            id='zoom-out-button'
+            class='btn btn-secondary w-100'
+            onclick='zoom_out();'
+          >
+            <i class='fas fa-search-minus me-1'></i>
+            Zoom Out
+          </button>
+        </div>
+        <div class='py-1'>
+          <button class='btn btn-secondary w-100' onclick='expand_all();'>
+            <i class='fas fa-expand me-1'></i>
+            Expand all
+          </button>
+        </div>
+        <div class='py-1'>
+          <button class='btn btn-secondary w-100' onclick='collapse_all();'>
+            <i class='fas fa-compress me-1'></i>
+            Collapse all
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Styling collapse section -->
+    <div class='p-3'>
+      <div
+        class='collapse-header'
+        data-bs-toggle='collapse'
+        data-bs-target='#styling-collapse'
+        aria-expanded='true'
+        aria-controls='styling-collapse'
+      >
+        <span class='collapse-button'>
+          Styling
+        </span>
+        <i class='fas fa-chevron-right'></i>
+      </div>
+      <div class='collapse' id='styling-collapse'>
+        <div class='py-1'>
+          <select
+            class='form-select bg-select-option'
+            onchange='set_theme(this.value);'
+          >
+            <option value=''>default</option>
+            <option value='primary'>primary</option>
+            <option value='warning'>warning</option>
+            <option value='danger'>danger</option>
+            <option value='success'>success</option>
+            <option value='info'>info</option>
+            <option value='greensea' selected='selected'>greensea</option>
+            <option value='nephrite'>nephrite</option>
+            <option value='belizehole'>belizehole</option>
+            <option value='wisteria'>wisteria</option>
+            <option value='asphalt'>asphalt</option>
+            <option value='orange'>orange</option>
+            <option value='pumpkin'>pumpkin</option>
+            <option value='pomegranate'>pomegranate</option>
+            <option value='clouds'>clouds</option>
+            <option value='asbestos'>asbestos</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced collapse section -->
+    <div class='p-3'>
+      <div
+        class='collapse-header'
+        data-bs-toggle='collapse'
+        data-bs-target='#advanced-collapse'
+        aria-expanded='true'
+        aria-controls='advanced-collapse'
+      >
+        <span class='collapse-button'>
+          Advanced
+        </span>
+        <i class='fas fa-chevron-right'></i>
+      </div>
+      <div class='collapse' id='advanced-collapse'>
+        <div class='py-1'>
+          <input
+            class='form-control custom-upload-button'
+            type='file'
             id='file_input_nodearray'
-            class='file_input'
-            type='file'
-          /></li>
-        <li><button class='sub' onclick='open_nodearray();'>open file</button></li>
-      </ol>
-      <li>freemind(.mm)</li>
-      <ol>
-        <li>
-          <button class='sub' onclick='get_freemind_data();'>show data</button>
-        </li>
-        <li>
-          <button class='sub' onclick='save_freemind_file();'>save file</button>
-        </li>
-        <li><input
-            id='file_input_freemind'
-            class='file_input'
-            type='file'
-          /></li>
-        <li><button class='sub' onclick='open_freemind();'>open file</button></li>
-      </ol>
-      <li>text</li>
-      <ol>
-        <li>
-          <button class='sub' onclick='get_text_data();'>show data</button>
-        </li>
-        <li>
-          <button class='sub' onclick='save_text_file();'>save file</button>
-        </li>
-        <li><input id='file_input_text' class='file_input' type='file' /></li>
-        <li><button class='sub' onclick='open_text();'>open file</button></li>
-      </ol>
-    </ol>
-  </div>
+          />
+        </div>
+        <div class='py-1'>
+          <button class='btn btn-secondary w-100' onclick='open_nodearray();'>
+            <i class='fas fa-eye me-1'></i>
 
+            Show Mindmap
+          </button>
+        </div>
+        <div class='py-1'>
+          <button
+            class='btn btn-secondary w-100'
+            onclick='get_nodearray_data();'
+          >
+            <i class='fas fa-eye me-1'></i>
+            Show data (JSON)
+          </button>
+        </div>
+        <div class='py-1'>
+          <button
+            class='btn btn-secondary w-100'
+            onclick='save_nodearray_file();'
+          >
+            <i class='fas fa-file-export me-1'></i>
+            Export file
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id='mindmap-container'>
   </div>
   <div style='display: none'>
     <input class='file' type='file' id='image-chooser' accept='image/*' />
+  </div>
+  <div>
+    <input
+      type='text'
+      class='d-none hidden'
+      name='mindmap-id'
+      id='mindmap-id'
+      value='{{mindmapId}}'
+      readonly
+    />
   </div>
 </div>
 
@@ -186,4 +221,10 @@
   type='text/javascript'
   src='//cdn.jsdelivr.net/npm/jsmind/es6/jsmind.screenshot.js'
 ></script>
+<script
+  src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'
+></script>
 <script src='/js/mindmap.js'></script>
+{{#if isEdit}}{{else}}
+  <script>open_empty();</script>
+{{/if}}

@@ -1,5 +1,10 @@
 const express = require('express');
 const { Mindmap, Node } = require('../../models');
+const {
+  changeKeyName,
+  parseMindmapBeforeRender,
+  parseMindmapNodesBeforeSave,
+} = require('../../utils/helpers');
 
 const mindmapRoutes = express.Router();
 
@@ -57,92 +62,95 @@ mindmapRoutes.get('/:id', async (req, res) => {
         },
       ],
     });
-    res.status(200).json(mindmap);
+
+    if (mindmap) {
+      const newMindmap = parseMindmapBeforeRender(
+        mindmap,
+        req.session.username || 'anonymous'
+      );
+
+      res.status(200).json(newMindmap);
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
   }
 });
 
-const data = [
-  {
-    id: 'root',
-    topic: 'jsMind Example',
-    expanded: true,
-    isroot: true,
-  },
-  {
-    id: '650ae4978256841f',
-    topic: '* Node_56841f *',
-    expanded: true,
-    parentid: 'root',
-    direction: 'right',
-  },
-  {
-    id: '650ae55ad598cc64',
-    topic: '* Node_98cc64 *',
-    expanded: true,
-    parentid: '650ae4978256841f',
-  },
-  {
-    id: '650ae4f7058953f8',
-    topic: '* Node_8953f8 *',
-    expanded: true,
-    parentid: 'root',
-    direction: 'right',
-  },
-];
-
-// function to change the key name of an array of objects
-function changeKeyName(arr, oldKey, newKey) {
-  arr.forEach((obj) => {
-    obj[newKey] = obj[oldKey];
-    delete obj[oldKey];
-  });
-  return arr;
-}
-
-// change the key name of the array of objects
-const newData = changeKeyName(data, 'id', 'node_id');
-
 // POST a new mindmap with related nodes
-mindmapRoutes.post('/', async (req, res) => {
+mindmapRoutes.post('/save', async (req, res) => {
   try {
-    console.log('newData: ', newData);
-
     console.log('req.body: ', req.body);
 
-    const newMindmap = await Mindmap.create({
-      name: req.body.name,
-      project_id: req.body.project_id,
-    });
+    if (req.body.data) {
+      const mindmap = await Mindmap.create({
+        name: req.body.name,
+        project_id: req.body.project_id,
+      });
 
-    console.log('newMindmap: ', newMindmap);
+      const lastNodeId = (await Node.max('id')) || 0;
 
-    // Get the last id of the node, if none, set to 0
-    const lastId = (await Node.max('id')) || 0;
+      const newMindmapNodes = parseMindmapNodesBeforeSave(
+        req.body.data,
+        mindmap.id,
+        lastNodeId
+      );
 
-    const data = newData.map((node) => {
-      const newNode = node;
-      newNode.mindmap_id = newMindmap.id;
-      if (newNode.node_id === 'root') {
-        newNode.node_id += lastId;
+      const newNodes = await Node.bulkCreate(newMindmapNodes);
+
+      res.status(200).json({ mindmap });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+});
+
+// PUT update a mindmap with related nodes
+mindmapRoutes.put('/update', async (req, res) => {
+  try {
+    if (req.body.data) {
+      const mindmap = await Mindmap.update(
+        {
+          name: req.body.name,
+        },
+        {
+          where: {
+            id: req.body.id,
+          },
+        }
+      );
+
+      const newMindmapNodes = parseMindmapNodesBeforeSave(
+        req.body.data,
+        req.body.id,
+        0
+      );
+
+      const newNodes = await Node.bulkCreate(newMindmapNodes, {
+        updateOnDuplicate: [
+          'node_id',
+          'topic',
+          'isroot',
+          'direction',
+          'expanded',
+          'data',
+          'parentid',
+          'mindmap_id',
+        ],
+      });
+
+      if (req.body.delete_nodes) {
+        // Destroy the nodes by list of node_id
+        const destroyNodes = await Node.destroy({
+          where: {
+            node_id: req.body.delete_nodes,
+          },
+        });
       }
 
-      if (newNode.parentid === 'root') {
-        newNode.parentid += lastId;
-      }
-
-      return newNode;
-    });
-
-    console.log('data: ', data);
-
-    const newNodes = await Node.bulkCreate(data);
-
-    console.log('newNodes: ', newNodes);
-
-    res.status(200).json({ newMindmap });
+      res.status(200).json({ mindmap });
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
