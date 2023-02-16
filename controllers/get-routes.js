@@ -9,7 +9,10 @@ const { User, Team, Project, Mindmap, Node } = require('../models');
 //get home
 router.get('/', async (req, res) => {
   const projectData = await Project.findAll({
-    
+    include: [
+      {model: Mindmap,
+      where: {project_id: projects.id}}
+    ]
   }).catch((err) => res.json(err));
 
   const projects = projectData.map((project) => project.get({ plain: true }));
