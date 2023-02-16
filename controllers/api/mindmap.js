@@ -30,6 +30,7 @@ mindmapRoutes.get('/', async (req, res) => {
         },
       ],
     });
+
     res.status(200).json(mindmaps);
   } catch (err) {
     res.status(500).json(err);

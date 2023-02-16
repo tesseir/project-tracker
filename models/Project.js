@@ -14,7 +14,7 @@ Project.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    team_id: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },

@@ -4,6 +4,8 @@ const withAuth = require('../utils/auth');
 const { User, Team, Project, Mindmap, Node } = require('../models');
 //connection signal
 
+
+
 //get home
 router.get('/', (req, res) => {
   console.log(req.session.loggedIn);
