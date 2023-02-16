@@ -2,33 +2,66 @@ li {
   margin-top: 2px;
   margin-bottom: 2px;
 }
+
 button {
   width: 140px;
 }
+
 select {
   width: 140px;
 }
+
 #layout {
   width: 1230px;
+  display: flex;
 }
+
 #mindmap-nav {
-  width: 210px;
+  width: 250px;
   height: 600px;
   border: solid 1px #ccc;
   overflow: auto;
-  float: left;
 }
+
 .file_input {
   width: 100px;
 }
+
 button.sub {
   width: 100px;
 }
 
 #mindmap-container {
-  float: left;
   width: 1000px;
   height: 600px;
   border: solid 1px #ccc;
   background: #f4f4f4;
+}
+
+.collapse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.collapse-header i {
+  transition: all 0.5s;
+}
+
+.collapse-header i.open {
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.bg-select-option {
+  background-color: #36393e;
+  color: #fff;
+}
+
+.custom-upload-button[type='file'],
+.custom-upload-button[type='file']::-webkit-file-upload-button,
+.custom-upload-button[type='file']::file-selector-button {
+  background-color: #36393e;
+  color: #fff;
 }

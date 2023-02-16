@@ -1,14 +1,13 @@
 const router = require('express').Router();
 const path = require('path');
+const withAuth = require('../utils/auth');
 const { User, Team, Project, Mindmap, Node } = require('../models');
-const withAuth = require('../utils/auth')
 //connection signal
 
 //get home
 router.get('/', (req, res) => {
-  console.log(req.session.loggedIn)
-  res.render('homepage', {  loggedIn: req.session.loggedIn,});
-
+  console.log(req.session.loggedIn);
+  res.render('homepage', { loggedIn: req.session.loggedIn });
 });
 
 router.get('/login', (req, res) => {
@@ -27,37 +26,12 @@ router.get('/login', (req, res) => {
 //   res.render('homepage');
 // });
 
-router.get('/mindmap', (req, res) => {
-  if (!req.session.loggedIn) {
-    res.redirect('/login');
-    return;
-  }
-  res.render('mindmap');
-});
-
 // get team
 router.get('/team', async (req, res) => {
   const teams = await Team.findAll().catch((err) => {
     res.json(err);
   });
   res.json(teams);
-});
-
-router.get('/mindmap/:id', async (req, res) => {
-  try {
-    const mindmap = await Mindmap.findOne({
-      where: { id: req.params.id },
-    });
-    const nodes = await Node.findAll();
-
-    if (!mindmap) {
-      return res.status(404).json({ message: 'Mindmap not found' });
-    }
-
-    return res.status(200).json({ nodes });
-  } catch (err) {
-    return res.status(500).json({ message: err });
-  }
 });
 
 //---------------------------------------------------------Users

@@ -1,89 +1,162 @@
 let _jm = null;
 
+// Create a variable to hold the mindmap data from the database
+let _mindmap = null;
+
+$(document).ready(() => {
+  $('#basic-collapse').on('show.bs.collapse', (e) => {
+    $(e.target).prev('.collapse-header').find('.fas').addClass('open');
+  });
+
+  $('#basic-collapse').on('hide.bs.collapse', (e) => {
+    $(e.target).prev('.collapse-header').find('.fas').removeClass('open');
+  });
+
+  $('#styling-collapse').on('show.bs.collapse', (e) => {
+    $(e.target).prev('.collapse-header').find('.fas').addClass('open');
+  });
+
+  $('#styling-collapse').on('hide.bs.collapse', (e) => {
+    $(e.target).prev('.collapse-header').find('.fas').removeClass('open');
+  });
+
+  $('#advanced-collapse').on('show.bs.collapse', (e) => {
+    $(e.target).prev('.collapse-header').find('.fas').addClass('open');
+  });
+
+  $('#advanced-collapse').on('hide.bs.collapse', (e) => {
+    $(e.target).prev('.collapse-header').find('.fas').removeClass('open');
+  });
+});
+
+const options = {
+  container: 'mindmap-container',
+  theme: 'greensea',
+  editable: true,
+  view: {
+    engine: 'svg',
+    draggable: true,
+  },
+};
+
+// Default mindmap data
+
 function open_empty() {
-  var options = {
-    container: 'mindmap-container',
-    theme: 'greensea',
-    editable: true,
-    view: {
-      engine: 'svg',
-      draggable: true,
+  console.log('open_empty');
+  const defaultMindmap = {
+    meta: {
+      name: 'Empty node',
+      author: '',
+      version: '1.0',
     },
+    format: 'node_array',
+    data: [
+      {
+        id: 'root',
+        topic: 'Empty node',
+        direction: null,
+        expanded: true,
+        isroot: true,
+      },
+    ],
   };
-  _jm = jsMind.show(options);
+  _jm = jsMind.show(options, defaultMindmap);
 }
 
-function open_json() {
-  var mind = {
-    meta: {
-      name: 'jsMind remote',
-      author: 'hizzgdev@163.com',
-      version: '0.2',
-    },
-    format: 'node_tree',
-    data: {
-      id: 'root',
-      topic: 'jsMind',
-      children: [
-        {
-          id: 'easy',
-          topic: 'Easy',
-          direction: 'left',
-          children: [
-            { id: 'easy1', topic: 'Easy to show' },
-            { id: 'easy2', topic: 'Easy to edit' },
-            { id: 'easy3', topic: 'Easy to store' },
-            { id: 'easy4', topic: 'Easy to embed' },
-            {
-              id: 'other3',
-              'background-image': 'ant.png',
-              width: '100',
-              height: '100',
-            },
-          ],
-        },
-        {
-          id: 'open',
-          topic: 'Open Source',
-          direction: 'right',
-          children: [
-            {
-              id: 'open1',
-              topic: 'on GitHub',
-              'background-color': '#eee',
-              'foreground-color': 'blue',
-              'leading-line-color': '#3333ff',
-            },
-            {
-              id: 'open2',
-              topic: 'BSD License',
-              'leading-line-color': '#ff33ff',
-            },
-          ],
-        },
-        {
-          id: 'powerful',
-          topic: 'Powerful',
-          direction: 'right',
-          children: [
-            { id: 'powerful1', topic: 'Base on Javascript' },
-            { id: 'powerful2', topic: 'Base on HTML5' },
-            { id: 'powerful3', topic: 'Depends on you' },
-          ],
-        },
-        {
-          id: 'other',
-          topic: 'test node',
-          direction: 'left',
-          children: [
-            { id: 'other1', topic: "I'm from local variable" },
-            { id: 'other2', topic: 'I can do everything' },
-          ],
-        },
-      ],
-    },
-  };
-  _jm.show(mind);
+function create_mindmap() {
+  const mindmap = _jm.get_data('node_array');
+  fetch('/api/mindmap/save', {
+    method: 'POST',
+    body: JSON.stringify(mindmap),
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      alert('Failed to save mindmap');
+    })
+    .then((data) => {
+      console.log(data);
+      alert('Mindmap saved successfully');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+// Render mindmap by route id
+function render_mindmap() {
+  const mindmapId = document.querySelector('#mindmap-id').value;
+
+  if (mindmapId) {
+    fetch(`/api/mindmap/${mindmapId}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        alert('Failed to render mindmap');
+      })
+      .then((data) => {
+        console.log(data);
+        _jm = jsMind.show(options, data);
+        // Pass mindmap name to the input field
+        _mindmap = _jm.get_data('node_array');
+        document.querySelector('#mindmap-name').value = data.name;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+}
+
+function update_mindmap(id) {
+  const mindmap = _jm.get_data('node_array');
+
+  mindmap.id = id;
+  mindmap.name = document.querySelector('#mindmap-name').value;
+
+  console.log('old_mind_map', _mindmap);
+  console.log('new_mind_map', mindmap);
+
+  const deletedNodes = [];
+
+  if (_mindmap.data.length > mindmap.data.length) {
+    _mindmap.data.forEach((node) => {
+      // Get all the nodes that are not in the new mindmap
+      if (!mindmap.data.find((n) => n.id === node.id)) {
+        deletedNodes.push(node.id);
+      }
+    });
+  }
+
+  mindmap.delete_nodes = deletedNodes;
+
+  console.log('mindmap', mindmap);
+
+  // return;
+
+  fetch('/api/mindmap/update', {
+    method: 'PUT',
+    body: JSON.stringify(mindmap),
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      alert('Failed to update mindmap');
+    })
+    .then((data) => {
+      console.log(data);
+      alert('Mindmap updated successfully');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 function open_ajax() {
@@ -91,10 +164,6 @@ function open_ajax() {
   jsMind.util.ajax.get(mind_url, function (mind) {
     _jm.show(mind);
   });
-}
-
-function screen_shot() {
-  _jm.screenshot.shootDownload();
 }
 
 function show_data() {
@@ -163,82 +232,6 @@ function add_node() {
   var node = _jm.add_node(selected_node, nodeid, topic);
 }
 
-var imageChooser = document.getElementById('image-chooser');
-
-imageChooser.addEventListener(
-  'change',
-  function (event) {
-    // Read file here.
-    var reader = new FileReader();
-    reader.onloadend = function () {
-      var selected_node = _jm.get_selected_node();
-      var nodeid = jsMind.util.uuid.newid();
-      var topic = undefined;
-      var data = {
-        'background-image': reader.result,
-        width: '100',
-        height: '100',
-      };
-      var node = _jm.add_node(selected_node, nodeid, topic, data);
-      //var node = _jm.add_image_node(selected_node, nodeid, reader.result, 100, 100);
-      //add_image_node:function(parent_node, nodeid, image, width, height, data, idx, direction, expanded){
-    };
-
-    var file = imageChooser.files[0];
-    if (file) {
-      reader.readAsDataURL(file);
-    }
-  },
-  false
-);
-
-function add_image_node() {
-  var selected_node = _jm.get_selected_node(); // as parent of new node
-  if (!selected_node) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  imageChooser.focus();
-  imageChooser.click();
-}
-
-function modify_node() {
-  var selected_id = get_selected_nodeid();
-  if (!selected_id) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  // modify the topic
-  _jm.update_node(selected_id, '--- modified ---');
-}
-
-function move_to_first() {
-  var selected_id = get_selected_nodeid();
-  if (!selected_id) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  _jm.move_node(selected_id, '_first_');
-}
-
-function move_to_last() {
-  var selected_id = get_selected_nodeid();
-  if (!selected_id) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  _jm.move_node(selected_id, '_last_');
-}
-
-function move_node() {
-  // move a node before another
-  _jm.move_node('other', 'open');
-}
-
 function remove_node() {
   var selected_id = get_selected_nodeid();
   if (!selected_id) {
@@ -246,57 +239,22 @@ function remove_node() {
     return;
   }
 
+  if (selected_id == 'root') {
+    prompt_info('can not remove root node.');
+    return;
+  }
+
   _jm.remove_node(selected_id);
-}
-
-function change_text_font() {
-  var selected_id = get_selected_nodeid();
-  if (!selected_id) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  _jm.set_node_font_style(selected_id, 28);
-}
-
-function change_text_color() {
-  var selected_id = get_selected_nodeid();
-  if (!selected_id) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  _jm.set_node_color(selected_id, null, '#000');
-}
-
-function change_background_color() {
-  var selected_id = get_selected_nodeid();
-  if (!selected_id) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  _jm.set_node_color(selected_id, '#eee', null);
-}
-
-function change_background_image() {
-  var selected_id = get_selected_nodeid();
-  if (!selected_id) {
-    prompt_info('please select a node first.');
-    return;
-  }
-
-  _jm.set_node_background_image(selected_id, 'ant.png', 100, 100);
 }
 
 function set_theme(theme_name) {
   _jm.set_theme(theme_name);
 }
 
-var zoomInButton = document.getElementById('zoom-in-button');
-var zoomOutButton = document.getElementById('zoom-out-button');
+var zoomInButton = document.querySelector('#zoom-in-button');
+var zoomOutButton = document.querySelector('#zoom-out-button');
 
-function zoomIn() {
+function zoom_in() {
   if (_jm.view.zoomIn()) {
     zoomOutButton.disabled = false;
   } else {
@@ -304,7 +262,7 @@ function zoomIn() {
   }
 }
 
-function zoomOut() {
+function zoom_out() {
   if (_jm.view.zoomOut()) {
     zoomInButton.disabled = false;
   } else {
@@ -321,17 +279,6 @@ function toggle_editable(btn) {
     _jm.enable_edit();
     btn.innerHTML = 'disable editable';
   }
-}
-
-// this method change size of container, perpare for adjusting jsmind
-function change_container() {
-  var c = document.getElementById('jsmind_container');
-  c.style.width = '800px';
-  c.style.height = '500px';
-}
-
-function resize_jsmind() {
-  _jm.resize();
 }
 
 function expand() {
@@ -366,14 +313,6 @@ function toggle() {
 
 function expand_all() {
   _jm.expand_all();
-}
-
-function expand_to_level2() {
-  _jm.expand_to_depth(2);
-}
-
-function expand_to_level3() {
-  _jm.expand_to_depth(3);
 }
 
 function collapse_all() {
@@ -411,82 +350,8 @@ function open_nodearray() {
   }
 }
 
-function get_freemind_data() {
-  var mind_data = _jm.get_data('freemind');
-  var mind_string = jsMind.util.json.json2string(mind_data);
-  alert(mind_string);
-}
-
-function save_freemind_file() {
-  var mind_data = _jm.get_data('freemind');
-  var mind_name = mind_data.meta.name || 'freemind';
-  var mind_str = mind_data.data;
-  jsMind.util.file.save(mind_str, 'text/xml', mind_name + '.mm');
-}
-
-function open_freemind() {
-  var file_input = document.getElementById('file_input_freemind');
-  var files = file_input.files;
-  if (files.length > 0) {
-    var file_data = files[0];
-    jsMind.util.file.read(file_data, function (freemind_data, freemind_name) {
-      if (freemind_data) {
-        var mind_name = freemind_name;
-        if (/.*\.mm$/.test(mind_name)) {
-          mind_name = freemind_name.substring(0, freemind_name.length - 3);
-        }
-        var mind = {
-          meta: {
-            name: mind_name,
-            author: 'hizzgdev@163.com',
-            version: '1.0.1',
-          },
-          format: 'freemind',
-          data: freemind_data,
-        };
-        _jm.show(mind);
-      } else {
-        prompt_info('can not open this file as mindmap');
-      }
-    });
-  } else {
-    prompt_info('please choose a file first');
-  }
-}
-
-function get_text_data() {
-  var mind_data = _jm.get_data('text');
-  var mind_string = jsMind.util.json.json2string(mind_data);
-  prompt_info(mind_string);
-}
-
-function save_text_file() {
-  var mind_data = _jm.get_data('text');
-  var mind_name = mind_data.meta.name;
-  var mind_str = jsMind.util.json.json2string(mind_data);
-  jsMind.util.file.save(mind_str, 'text/jsmind', mind_name + '.jm');
-}
-
-function open_text() {
-  var file_input = document.getElementById('file_input_text');
-  var files = file_input.files;
-  if (files.length > 0) {
-    var file_data = files[0];
-    jsMind.util.file.read(file_data, function (jsmind_data, jsmind_name) {
-      var mind = jsMind.util.json.string2json(jsmind_data);
-      if (!!mind) {
-        _jm.show(mind);
-      } else {
-        prompt_info('can not open this file as mindmap');
-      }
-    });
-  } else {
-    prompt_info('please choose a file first');
-  }
-}
-
 function prompt_info(msg) {
   alert(msg);
 }
 
-open_empty();
+render_mindmap();
