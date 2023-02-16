@@ -19,7 +19,15 @@ Once on the homepage, the user would either sign up for an account or log in. A 
 
 # Visuals
 
-screenshots here
+![image of use](https://raw.githubusercontent.com/tesseir/project-tracker/main/assets/Capture.PNG1.PNG)
+mainpage
+
+![image of use](https://raw.githubusercontent.com/tesseir/project-tracker/main/assets/Capture.PNG2.PNG)
+login page
+
+![image of use](https://raw.githubusercontent.com/tesseir/project-tracker/main/assets/Capture.PNG3.PNG)
+mindmap
+
 
 # Link
 
