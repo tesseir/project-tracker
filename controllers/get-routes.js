@@ -18,13 +18,13 @@ router.get('/login', (req, res) => {
   res.render('loginpage');
 });
 
-// router.get('/logout', (req, res) => {
-//   if (!req.session.loggedIn) {
-//     res.redirect('/');
-//     return;
-//   }
-//   res.render('homepage');
-// });
+router.get('/logout', (req, res) => {
+  if (!req.session.loggedIn) {
+    res.redirect('/');
+    return;
+  }
+  res.render('homepage');
+});
 
 // get team
 router.get('/team', async (req, res) => {
