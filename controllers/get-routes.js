@@ -4,23 +4,23 @@ const withAuth = require('../utils/auth');
 const { User, Team, Project, Mindmap, Node } = require('../models');
 //connection signal
 
-
-
-//get home
+// Get all projects and related mindmaps
 router.get('/', async (req, res) => {
-  const projectData = await Project.findAll({
+  const projects = await Project.findAll({
     include: [
-      {model: Mindmap,
-      where: {project_id: projects.id}}
-    ]
-  }).catch((err) => res.json(err));
+      {
+        model: Mindmap,
+        attributes: ['id', 'name', 'project_id'],
+        as: 'mindmaps',
+      },
+    ],
+    raw: true,
+    nest: true,
+  });
 
-  const projects = projectData.map((project) => project.get({ plain: true }));
-
-  res.render('homepage', { 
+  res.render('homepage', {
     projects,
     loggedIn: req.session.loggedIn,
-    
   });
 });
 
@@ -90,9 +90,7 @@ router.get('/project', async (req, res) => {
 
   const projects = projectData.map((project) => project.get({ plain: true }));
 
-  res
-    .render('')  
-  .json({ projects });
+  res.render('').json({ projects });
 });
 
 //get single project
