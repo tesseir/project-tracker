@@ -1,5 +1,5 @@
 const User = require('./User');
-const Team = require('./Team');
+
 const Project = require('./Project');
 const Mindmap = require('./Mindmap');
 const Node = require('./Node');
@@ -8,23 +8,19 @@ const Node = require('./Node');
 // Team.hasMany(Users)
 
 // */
-Project.belongsTo(Team, {
-  foreignKey: 'team_id',
-  as: 'team',
+Project.belongsTo(User, {
+  foreignKey: 'user_id',
+  as: 'user',
   onDelete: 'set null',
 });
 
-Team.hasMany(User, {
+User.hasMany(Project, {
   foreignKey: 'user_id',
-  as: 'users',
+  as: 'projects',
   onDelete: 'cascade',
 });
 
-User.belongsTo(Team, {
-  foreignKey: 'team_id',
-  as: 'team',
-  onDelete: 'set null',
-});
+
 
 Project.hasMany(Mindmap, {
   foreignKey: 'project_id',
@@ -64,7 +60,6 @@ Node.belongsTo(Node, {
 
 module.exports = {
   User,
-  Team,
   Project,
   Mindmap,
   Node,
