@@ -21,6 +21,7 @@ router.get('/', async (req, res) => {
   res.render('homepage', {
     projects,
     loggedIn: req.session.loggedIn,
+    name: req.session.username,
   });
 });
 
@@ -32,12 +33,24 @@ router.get('/login', (req, res) => {
   res.render('loginpage');
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', async (req, res) => {
   if (!req.session.loggedIn) {
     res.redirect('/');
     return;
   }
-  res.render('homepage');
+  const projects = await Project.findAll({
+    include: [
+      {
+        model: Mindmap,
+        attributes: ['id', 'name', 'project_id'],
+        as: 'mindmaps',
+      },
+    ],
+    raw: true,
+    nest: true,
+  });
+
+  res.render('homepage', { projects });
 });
 
 // get team
