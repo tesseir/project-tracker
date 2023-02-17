@@ -25,7 +25,8 @@
     "handlebars": "^4.7.6",
     "jsmind": "^0.5.2",
     "mysql2": "^3.1.1",
-    "sequelize": "^6.28.0"
+    "sequelize": "^6.28.0",
+    "sweetalert2": "^11.7.1"
   },
   "bugs": {
     "url": "https://github.com/tesseir/project-tracker/issues"

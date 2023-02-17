@@ -12,7 +12,7 @@ router.get('/create', (req, res) => {
 
 router.get('/:id/edit', (req, res) => {
   if (!req.session.loggedIn) {
-    res.redirect('/');
+    res.redirect('/login');
     return;
   }
   res.render('mindmap', { isEdit: true, mindmapId: req.params.id });

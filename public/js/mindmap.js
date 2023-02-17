@@ -61,13 +61,25 @@ function open_empty() {
       },
     ],
   };
+
   _jm = jsMind.show(options, defaultMindmap);
 }
 
 function create_mindmap() {
   const mindmap = _jm.get_data('node_array');
 
-  mindmap.name = document.querySelector('#mindmap-name').value;
+  const mindmapName = document.querySelector('#mindmap-name').value;
+
+  // Using regex to check if the mindmap name is empty or contains only spaces
+  if (!mindmapName || /^\s*$/.test(mindmapName)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Mindmap name is required',
+    });
+    return;
+  }
+
+  mindmap.name = mindmapName;
 
   // Call api create project
   fetch('/api/project', {
@@ -79,7 +91,10 @@ function create_mindmap() {
       if (response.ok) {
         return response.json();
       }
-      alert('Failed to create project');
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to create project',
+      });
     })
     .then((data) => {
       console.log(data);
@@ -95,12 +110,19 @@ function create_mindmap() {
           if (response.ok) {
             return response.json();
           }
-          alert('Failed to create mindmap');
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to create mindmap',
+          });
         })
         .then((data) => {
           console.log(data);
-          document.location.replace(`/mindmap/${data?.mindmap?.id}/edit`);
-          alert('Mindmap created successfully');
+          Swal.fire({
+            icon: 'success',
+            title: 'Mindmap create successfully',
+          }).then(() => {
+            document.location.replace(`/mindmap/${data?.mindmap?.id}/edit`);
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -123,7 +145,10 @@ function render_mindmap() {
         if (response.ok) {
           return response.json();
         }
-        alert('Failed to render mindmap');
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed to render mindmap',
+        });
       })
       .then((data) => {
         console.log(data);
@@ -142,11 +167,20 @@ function render_mindmap() {
 function update_mindmap(id) {
   const mindmap = _jm.get_data('node_array');
 
-  mindmap.id = id;
-  mindmap.name = document.querySelector('#mindmap-name').value;
+  const mindmapName = document.querySelector('#mindmap-name').value;
+  if (!mindmapName || /^\s*$/.test(mindmapName)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Mindmap name is required',
+    });
+    return;
+  }
 
-  console.log('old_mind_map', _mindmap);
-  console.log('new_mind_map', mindmap);
+  mindmap.id = id;
+  mindmap.name = mindmapName;
+
+  // console.log('old_mind_map', _mindmap);
+  // console.log('new_mind_map', mindmap);
 
   const deletedNodes = [];
 
@@ -170,7 +204,10 @@ function update_mindmap(id) {
       if (response.ok) {
         return response.json();
       }
-      alert('Failed to update project');
+      Swal.fire({
+        icon: 'error',
+        title: 'Failed to update project',
+      });
     })
     .then((data) => {
       fetch('/api/mindmap/update', {
@@ -182,11 +219,16 @@ function update_mindmap(id) {
           if (response.ok) {
             return response.json();
           }
-          alert('Failed to update mindmap');
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to update mindmap',
+          });
         })
         .then((data) => {
-          console.log('after update', data);
-          alert('Mindmap updated successfully');
+          Swal.fire({
+            icon: 'success',
+            title: 'Mindmap updated successfully',
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -224,11 +266,11 @@ function open_file() {
       if (!!mind) {
         _jm.show(mind);
       } else {
-        prompt_info('can not open this file as mindmap');
+        prompt_info('Can not open this file as mindmap');
       }
     });
   } else {
-    prompt_info('please choose a file first');
+    prompt_info('Please choose a file first');
   }
 }
 
@@ -258,7 +300,7 @@ function get_selected_nodeid() {
 function add_node() {
   var selected_node = _jm.get_selected_node(); // as parent of new node
   if (!selected_node) {
-    prompt_info('please select a node first.');
+    prompt_info('Please select a node first.');
     return;
   }
 
@@ -270,12 +312,12 @@ function add_node() {
 function remove_node() {
   var selected_id = get_selected_nodeid();
   if (!selected_id) {
-    prompt_info('please select a node first.');
+    prompt_info('Please select a node first.');
     return;
   }
 
   if (selected_id == 'root') {
-    prompt_info('can not remove root node.');
+    prompt_info('Can not remove root node.');
     return;
   }
 
@@ -319,7 +361,7 @@ function toggle_editable(btn) {
 function expand() {
   var selected_id = get_selected_nodeid();
   if (!selected_id) {
-    prompt_info('please select a node first.');
+    prompt_info('Please select a node first.');
     return;
   }
 
@@ -329,7 +371,7 @@ function expand() {
 function collapse() {
   var selected_id = get_selected_nodeid();
   if (!selected_id) {
-    prompt_info('please select a node first.');
+    prompt_info('Please select a node first.');
     return;
   }
 
@@ -339,7 +381,7 @@ function collapse() {
 function toggle() {
   var selected_id = get_selected_nodeid();
   if (!selected_id) {
-    prompt_info('please select a node first.');
+    prompt_info('Please select a node first.');
     return;
   }
 
@@ -377,16 +419,19 @@ function open_nodearray() {
       if (!!mind) {
         _jm.show(mind);
       } else {
-        prompt_info('can not open this file as mindmap');
+        prompt_info('Can not open this file as mindmap');
       }
     });
   } else {
-    prompt_info('please choose a file first');
+    prompt_info('Please choose a file first');
   }
 }
 
 function prompt_info(msg) {
-  alert(msg);
+  return Swal.fire({
+    icon: 'warning',
+    title: msg,
+  });
 }
 
 render_mindmap();
